@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AuthenticateUserRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -36,7 +37,8 @@ class AuthController extends Controller
             return ApiResponse::success(
                 [
                     'token' => $token,
-                    'user' => $user, // cara-1 tampilkan semua
+                    // 'user' => $user, // cara-1 tampilkan semua
+                    'user' => new UserResource($user)
                 ],
                 'Login Successfully'
             );
