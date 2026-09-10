@@ -1,0 +1,55 @@
+# Zero-Downtime Deployment, deploy tetap di jam tidak ada pemakaian user
+name: Deploy Laravel API to VPS
+
+on:
+  push:
+    branches:
+      - main # Workflow pemicu CD: otomatis saat push ke branch main, proses pengiriman ke server dimulai
+
+jobs:
+  # Proses Continuous Integration (CI)
+  # nanti dulu....
+
+  # Proses Continuous Deployment (CD)
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploying code via SSH
+        uses: appleboy/ssh-action@v1.0.3 # Jembatan CD: GitHub Actions membuka koneksi ssh ke VPS
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            # Proses Instalasi/Deployment (Inti dari Continuous Deployment Pipeline - CD) #
+            # Menggantikan tugas manual login ke VPS, git pull, dan melakukan perintah artisan satu per satu
+
+            cd /var/www/api-pos
+            # 1. Simpan commit hash sebelum git pull untuk deteksi perubahan
+            PREV_COMMIT=$(git rev-parse HEAD)
+
+            # 2. pull commit/kode terbaru dari branch main
+            git pull origin main
+
+            # 3. Cek apakah file compose berubah. Jika YA, jalankan docker compose up -d
+            if git diff --name-only $PREV_COMMIT HEAD | grep -E 'docker-compose.prod.yml'; then
+              echo "Konfigurasi Docker Compose berubah. Reloading containers..."
+              docker compose -f docker-compose.prod.yml up -d --wait
+            fi
+
+            # 4. Menginstal ulang dependency vendor jika ada perubahan composer.json
+            docker compose -f docker-compose.prod.yml exec --user 1000:1000 app composer install --optimize-autoloader --no-dev
+
+            # 5. Mengesekusi migrasi database otomatis
+            docker compose -f docker-compose.prod.yml exec --user 1000:1000 app php artisan migrate --force
+
+            # 6. Refresh & Optimize konfigurasi Laravel
+            docker compose -f docker-compose.prod.yml exec --user 1000:1000 app php artisan optimize
+
+# Zero-Downtime Deployment (Poin Utama): Untuk push harian yang hanya mengubah kode PHP/Laravel, Docker tidak akan restart. Aplikasi tetap menyala 100% tanpa ada downtime 50 detik.
+
+# Otomatis & Efisien: Jika kamu mengubah file docker-compose.prod.yml atau .env, skrip git diff akan mendeteksinya secara otomatis dan baru menjalankan docker-compose.prod.yml up -d --wait
+
+# Parameter --wait: Menjamin Docker menunggu status healthcheck MySQL & App healthy sebelum melangkah ke perintah Composer/Artisan berikutnya. Ini mencegah error connection refused.
