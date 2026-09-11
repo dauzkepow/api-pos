@@ -43,4 +43,13 @@ class AuthController extends Controller
                 'Login Successfully'
             );
     }
+
+    // Get Profile
+    public function me(Request $request)
+    {
+        return ApiResponse::success(
+            new UserResource($request->user()),
+            'User Data'
+        );
+    }
 }
