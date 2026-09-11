@@ -52,4 +52,15 @@ class AuthController extends Controller
             'User Data'
         );
     }
+
+    // Logout = hapus token, buang kunci
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return ApiResponse::success(
+            null,
+            'Logout Successfully'
+        );
+    }
 }

@@ -9,6 +9,7 @@ Route::prefix('v1')->group(function() {
 
     // bungkus ke middleware (Gerbang)
     Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/me', [AuthController::class, 'me']);
+        Route::get('/me', [AuthController::class, 'me']); // get profile
+        Route::post('/logout', [AuthController::class, 'logout']); // logout
     });
 });
