@@ -19,7 +19,7 @@ class ApiResponse
         return response()->json([
             'success' => true,
             'message' => $message,
-            'data' => $data
+            'data' => $data // ambil dari JSONResource|array|null $data = null
         ], $status);
     }
 

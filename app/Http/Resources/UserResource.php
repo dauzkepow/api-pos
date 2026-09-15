@@ -16,8 +16,8 @@ class UserResource extends JsonResource
     {
         // tampilkann format response API JSON
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id'    => $this->id,
+            'name'  => $this->name,
             'email' => $this->email
         ];
     }

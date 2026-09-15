@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class AuthenticateUserRequest extends FormRequest
+class UpdateProductCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,8 @@ class AuthenticateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // digunakan sebagai parameter function di controller
-            'email'     => 'required|email',
-            'password'  => 'required|string'
+            'name'          => 'sometimes|string|max:255', // sometimes bisa update salah satu
+            'description'   => 'nullable|string'
         ];
     }
 }

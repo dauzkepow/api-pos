@@ -12,7 +12,7 @@ class ProductCategory extends Model
     // melakukan query ketika ada search yang diisi
     public function scopeSearch($query, $search)
     {
-        return $query->when($$search, function ($query, $search) {
+        return $query->when($search, function ($query, $search) {
             $query->where('name', 'like', "%{$search}%");
         });
     }
