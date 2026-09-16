@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\V1\ProductCategoryController;
 use App\Http\Controllers\Api\V1\ProductCategoryImageController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ProductImageController;
+use App\Http\Controllers\Api\V1\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,5 +26,9 @@ Route::prefix('v1')->group(function () {
         Route::get('products/options', [ProductController::class, 'options']); // options
         Route::post('products/{id}/image', [ProductImageController::class, 'store']); // upload image
         Route::apiResource('products', ProductController::class); // pakai apiResource karena ada function operasi CRUD
+
+        // Customer
+        Route::get('customers/options', [CustomerController::class, 'options']); // options
+        Route::apiResource('customers', CustomerController::class); // pakai apiResource karena ada function operasi CRUD
     });
 });
