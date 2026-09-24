@@ -19,6 +19,7 @@ class ProductCategoryResource extends JsonResource
             'id'            => $this->id,
             // jika image ada maka akan mengeluarkan asset Storage::url
             // jika image tidak ada muncull null
+            // jangan lupa jalankan php artisan storage:link
             // 'image'         => $this->image,
             'image'         => $this->image ? asset(Storage::url($this->image)) : null,
             'name'          => $this->name,
