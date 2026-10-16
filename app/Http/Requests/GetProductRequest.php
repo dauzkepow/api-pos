@@ -24,7 +24,8 @@ class GetProductRequest extends FormRequest
     {
         return [
             'search'    => 'nullable|string',
-            'limit'     => 'nullable|integer|min:1|max:100'
+            'limit'     => 'nullable|integer|min:1|max:100',
+            'product_category_id' => 'nullable|integer|exists:product_categories,id', // untuk filtering di frontend
         ];
     }
 }

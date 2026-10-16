@@ -16,11 +16,13 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    // munculkan product + pagination
+    // munculkan product + pagination + hasil filter product category
     public function index(GetProductRequest $request)
     {
         $products = Product::with('category')
             ->search($request->search)
+            // Filter menggunakan parameter product_category_id
+            ->byCategory($request->input('product_category_id')) // Gunakan scopeByCategory di Product.php
             ->latest()
             ->paginate($request->limit ?? 10);
 
