@@ -35,9 +35,9 @@ class ProductController extends Controller
     // Get Product Options, tampilkan product tanpa pagination
     public function options(GetProductRequest $request)
     {
-        // hanya id dan name
-        $products = Product::select('id', 'name')
-            ->search($request->search)
+        // option pilih ke search
+        $products = Product::search($request->search)
+            ->byCategory($request->input('product_category_id'))
             ->orderBy('name')
             ->get();
 
