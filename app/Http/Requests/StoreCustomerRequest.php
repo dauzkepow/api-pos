@@ -24,7 +24,7 @@ class StoreCustomerRequest extends FormRequest
     {
         return [
             'name'  => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20'
+            'phone' => 'required|string|max:20'
         ];
     }
 }
